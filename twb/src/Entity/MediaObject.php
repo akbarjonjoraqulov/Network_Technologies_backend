@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Controller\CreateMediaObjectAction;
@@ -20,8 +22,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     types: ['https://schema.org/MediaObject'],
     operations: [
-        new Get(),
-        new GetCollection(),
+        new Get(security: "is_granted('ROLE_USER')"),
+        new GetCollection(security: "is_granted('ROLE_USER')"),
         new Post(
             controller: CreateMediaObjectAction::class,
             openapi: new Model\Operation(
@@ -41,20 +43,23 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     ])
                 )
             ),
+            security: "is_granted('ROLE_ADMIN')",
             validationContext: ['Groups' => ['media_object:read']],
-            deserialize: false
-        )
+            deserialize: false,
+        ),
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
+        new Patch(security: "is_granted('ROLE_ADMIN')"),
     ],
     normalizationContext: ['groups' => ['media_object:read']]
 )]
 class MediaObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read', 'user:read'])]
+    #[Groups(['media_object:read'])]
     private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['media_object:read', 'user:read'])]
+    #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
@@ -63,21 +68,6 @@ class MediaObject
 
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "mediaObjects")]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $user = null;
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
 
     public function getId(): ?int
     {

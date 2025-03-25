@@ -18,8 +18,12 @@ class UserFactory
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function create(string $givenName, string $familyName, string $password, string $email, array $videos = []): User
-    {
+    public function create(
+        string $givenName,
+        string $familyName,
+        string $password,
+        string $email,
+    ): User {
         $user = new User();
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
@@ -29,10 +33,6 @@ class UserFactory
         $user->setPassword($hashedPassword);
         $user->setEmail($email);
         $user->setCreatedAt(new DatePoint(timezone: new DateTimeZone('Asia/Tashkent')));
-
-        foreach ($videos as $video) {
-            $user->addVideo($video);
-        }
 
         return $user;
     }

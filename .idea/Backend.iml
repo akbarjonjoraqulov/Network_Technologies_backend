@@ -102,6 +102,9 @@
       <excludeFolder url="file://$MODULE_DIR$/twb/vendor/vich/uploader-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/twb/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/twb/vendor/willdurand/negotiation" />
+      <excludeFolder url="file://$MODULE_DIR$/twb/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/twb/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/twb/vendor/lexik/jwt-authentication-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

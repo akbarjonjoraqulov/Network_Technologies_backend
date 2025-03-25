@@ -8,7 +8,6 @@ use ApiPlatform\Validator\ValidatorInterface;
 use App\Component\User\UserFactory;
 use App\Component\User\UserManager;
 use App\Entity\User;
-use JetBrains\PhpStorm\NoReturn;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +22,7 @@ class UserCreateAction extends AbstractController
         readonly private ValidatorInterface $validator,
     ) {
     }
-    #[NoReturn]
+
     public function __invoke(Request $request, SerializerInterface $serializer): JsonResponse
     {
         $data = $serializer->deserialize($request->getContent(), User::class, 'json');
@@ -34,8 +33,7 @@ class UserCreateAction extends AbstractController
             $data->getGivenName(),
             $data->getFamilyName(),
             $data->getPassword(),
-            $data->getEmail(),
-            $data->getVideo()->toArray()
+            $data->getEmail()
         );
 
         $this->userManager->save($user, true);
@@ -45,7 +43,7 @@ class UserCreateAction extends AbstractController
             'familyName' => $user->getFamilyName(),
             'givenName' => $user->getGivenName(),
             'email' => $user->getEmail(),
-            'createdAt' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdAt' => $user->getCreatedAt(),
         ], Response::HTTP_CREATED);
     }
 }
